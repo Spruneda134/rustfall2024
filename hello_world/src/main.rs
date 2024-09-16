@@ -1,10 +1,13 @@
-fn main() {
-    let x = 5;
-    let y = x; // This creates a copy for primitive types
-    println!("x is: {}, y is: {}", x, y);
+fn concat_strings(s1: &String, s2: &String) -> String {
+    // Your code here
+    let mut word = s1.to_string();
+    word.push_str(s2);
+    return word;
+}
 
-    let s1 = String::from("Hello");
-    let s2 = s1; // This moves ownership, s1 is no longer valid
-    
-    // println!("s1 is: {}, s2 is: {}", s1, s2); // This would cause a compile error
+fn main() {
+    let s1 = String::from("Hello, ");
+    let s2 = String::from("World!");
+    let result = concat_strings(&s1, &s2);
+    println!("{}", result); // Should print: "Hello, World!"
 }
