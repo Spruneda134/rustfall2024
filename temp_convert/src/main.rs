@@ -5,10 +5,7 @@ fn fahrenheit_to_celsius(f: f64) -> f64 {
     return (f- FPOINT) * 5.0/9.0;
 }
 
-//Celsius to Fahrenheit
 // celsius_to_fahrenheit(c: f64) -> f64
-
-
 
 fn main() {
     let mut temp: f64 = 99.0;
