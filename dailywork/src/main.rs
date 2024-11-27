@@ -1,34 +1,39 @@
-fn classic_example_stack() {
+use std::rc::Rc;
+use std::cell::RefCell;
+
+fn sharing_resource_refcell_count() {
+    struct FamilyMember {
+        tv: Rc<RefCell<TV>>,
+    }
+
     #[derive(Debug)]
-    struct Stack<T> {
-        items: Vec<T>,
+    struct TV {
+        channel: String,
     }
 
-    impl<T> Stack<T> {
-        fn new() -> Stack<T> {
-            Stack { items: Vec::new() }
-        }
-        fn push(&mut self, item: T) {
-            self.items.push(item);
-        }
-
-        fn pop(&mut self) -> Option<T> {
-            self.items.pop()
+    fn member_start_watch_tv() -> FamilyMember {
+        let tv_is_on = Rc::new(RefCell::new(TV{channel:"BBC".to_string()}));
+        FamilyMember {
+            tv: tv_is_on, 
         }
     }
 
-    let mut stack = Stack::<i32>::new();
-    stack.push(1);
-    stack.push(2);
-    stack.push(3);
+    let dad = member_start_watch_tv();
+    let mom = FamilyMember { tv: Rc::clone(&dad.tv) };
+    println!("TV channel for mom {:?}", mom.tv);
 
-    println!("My stack holds {:?}", stack);
-    stack.pop();
-    println!("My stack holds {:?}", stack);
+    let mut remote_control = dad.tv.borrow_mut();
+    println!("TV channel {:?}", remote_control);
+
+    remote_control.channel = "MTV".to_string();
+    println!("TV channel {:?}", remote_control);
+    drop(remote_control);
+    println!("TV channel for mom {:?}", mom.tv);
 }
+//Struct person should have a few basic variables but it should be immutable. I want to be able to change one of the variables by referene.
 
-fn main({
-    
+fn main(){
+    sharing_resource_refcell_count()
 
 
-})
+}
