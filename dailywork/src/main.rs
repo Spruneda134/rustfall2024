@@ -1,39 +1,30 @@
-use std::rc::Rc;
-use std::cell::RefCell;
+use rayon::prelude::*;
 
-fn sharing_resource_refcell_count() {
-    struct FamilyMember {
-        tv: Rc<RefCell<TV>>,
+fn data_paralelism_rayon() {
+
+    use rayon::prelude::*;
+    
+    let mut data = vec![1, 2, 3, 4, 5];
+    
+    data.par_iter_mut().for_each(|x| {
+        *x *= 2;
+    });
+    
+    // from code perspective it seems trivial, but I want you to realize how much heavy lifting happens behind the hood:
+    //The Rayon library uses work stealing to dynamically balance the workload among threads, 
+    //providing better performance compared to a static division of work among threads.
+    
+    // on top it creates a separate scope to escape need to lock data
+    
+    
+    
+    // Concept of work stealing and separate scope.
+    
+    
+    
+    println!("{:?}", data); // [2, 4, 6, 8, 10]
     }
 
-    #[derive(Debug)]
-    struct TV {
-        channel: String,
-    }
-
-    fn member_start_watch_tv() -> FamilyMember {
-        let tv_is_on = Rc::new(RefCell::new(TV{channel:"BBC".to_string()}));
-        FamilyMember {
-            tv: tv_is_on, 
-        }
-    }
-
-    let dad = member_start_watch_tv();
-    let mom = FamilyMember { tv: Rc::clone(&dad.tv) };
-    println!("TV channel for mom {:?}", mom.tv);
-
-    let mut remote_control = dad.tv.borrow_mut();
-    println!("TV channel {:?}", remote_control);
-
-    remote_control.channel = "MTV".to_string();
-    println!("TV channel {:?}", remote_control);
-    drop(remote_control);
-    println!("TV channel for mom {:?}", mom.tv);
-}
-//Struct person should have a few basic variables but it should be immutable. I want to be able to change one of the variables by referene.
-
-fn main(){
-    sharing_resource_refcell_count()
-
-
+fn main() {
+    data_paralelism_rayon();
 }
